@@ -1,0 +1,28 @@
+services:
+  postgres:
+    container_name: api_cursos_postgres
+    # 1. Fixar a versão e usar Alpine
+    image: postgres:16-alpine
+    # 2. Política de reinicialização
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      # 3. Uso de variáveis de ambiente com valores padrão (fallback)
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-admin}
+      - POSTGRES_DB=${DB_NAME:-api_cursos}
+      # 4. Definição explícita do diretório de dados
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # 5. Verificação de integridade (Healthcheck)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-api_cursos}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pgdata:
