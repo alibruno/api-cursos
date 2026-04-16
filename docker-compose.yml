@@ -1,8 +1,8 @@
 services:
   postgres:
     container_name: api_cursos_postgres
-    # 1. Fixar a versão e usar Alpine
-    image: postgres:16-alpine
+    # Usando a imagem padrão baseada em Debian (Seguro e testado para produção)
+    image: postgres:16
     # 2. Política de reinicialização
     restart: unless-stopped
     ports:
